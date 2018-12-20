@@ -8,34 +8,34 @@ mainClass: 'class' Identifier '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' Ide
 classDeclaration  : 'class' Identifier (EXTENDS Identifier)? '{' (varDec)* (methodDec)* '}';
 varDec   : type Identifier ';';
 methodDec: PUBLIC type Identifier '(' (type Identifier (',' type Identifier)*)? ')' '{' (varDec)* (statement)* RETURN expression ';' '}';
-type    : INT '[' ']'       #IntArrayType
-        | BOOLEAN           #BooleanType
-        | INT               #IntType
-        | Identifier                #ClassType
+type    : INT '[' ']'       
+        | BOOLEAN           
+        | INT               
+        | Identifier                
         ;
-statement: '{' (statement)* '}'                         #BraceStatement
-         | IF '(' expression ')' statement ELSE statement     #IfStatement
-         | WHILE '(' expression ')' statement                 #WhileStatement
-         | 'System.out.println' '(' expression ')' ';'        #PrintStatement
-         | Identifier '=' expression ';'                              #AssignStatement
-         | Identifier '[' expression ']' '=' expression ';'                 #AssignArrayStatement
+statement: '{' (statement)* '}'                         
+         | IF '(' expression ')' statement ELSE statement     
+         | WHILE '(' expression ')' statement                 
+         | 'System.out.println' '(' expression ')' ';'        
+         | Identifier '=' expression ';'                              
+         | Identifier '[' expression ']' '=' expression ';'                 
          ;
-expression: expression '&&' expression                                #AndExpr
-          | expression '<' expression                                 #LessExpr
-          | expression ('+' | '-') expression                         #PlusMinusExpr
-          | expression '*' expression                                 #TimesExpr
-          | expression '[' expression ']'                             #IndexExpr
-          | expression '.' LENGTH                               #LengthExpr
-          | expression '.' Identifier '(' (expression (',' expression)*)? ')'       #CallExpr
-          | <INTEGER_LITERAL>                   #IntExpr
-          | TRUE                      #TrueExpr
-          | FALSE                     #FalseExpr
-          | Identifier                        #ClassExpr
-          | THIS                      #ThisExpr
-          | NEW INT '[' expression ']'      #NewIntArrayExpr
-          | NEW Identifier '(' ')'            #NewClassInstanceExpr
-          | '!' expression                  #NotExpr
-          | '(' expression ')'              #ParenthesisExpr
+expression: expression '&&' expression                                
+          | expression '<' expression                                
+          | expression ('+' | '-') expression                         
+          | expression '*' expression                                 
+          | expression '[' expression ']'                             
+          | expression '.' LENGTH                               
+          | expression '.' Identifier '(' (expression (',' expression)*)? ')'       
+          | <INTEGER_LITERAL>                   
+          | TRUE                      
+          | FALSE                     
+          | Identifier                        
+          | THIS                      
+          | NEW INT '[' expression ']'      
+          | NEW Identifier '(' ')'            
+          | '!' expression                  
+          | '(' expression ')'              
           ;
 
 // types
