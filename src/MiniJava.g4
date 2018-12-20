@@ -1,90 +1,94 @@
 grammar MiniJava;
 
-// parser rules
-// reference: http://www.cambridge.org/us/features/052182060X/grammar.html
-prog    : mainClass (classDeclaration )* EOF;
+//rules 
+//reference: http://www.cambridge.org/us/features/052182060X/grammar.html
+
+prog    : mainClass (classDeclaration)* EOF;
 
 mainClass: 'class' Identifier '{' PUBLIC STATIC VOID MAIN '(' STRING '[' ']' Identifier ')' '{' statement '}' '}';
-classDeclaration  : 'class' Identifier (EXTENDS Identifier)? '{' (varDec)* (methodDec)* '}';
-varDec   : type Identifier ';';
-methodDec: PUBLIC type Identifier '(' (type Identifier (',' type Identifier)*)? ')' '{' (varDec)* (statement)* RETURN expression ';' '}';
-type    : INT '[' ']'       
-        | BOOLEAN           
-        | INT               
-        | Identifier                
+classDeclaration : 'class' Identifier (EXTENDS Identifier)? '{' (varDeclaration)* (methodDeclaration)* '}';
+varDeclaration   : type Identifier ';';
+methodDeclaration: PUBLIC type Identifier '(' (type Identifier (',' type Identifier)*)? ')' '{' (varDeclaration)* (statement)* RETURN expression ';' '}';
+type    : INT '[' ']'       #TypeIntArray
+        | BOOLEAN           #TypeBool
+        | INT               #TypeInt
+        | Identifier        #TypeClass
         ;
-statement: '{' (statement)* '}'                         
-         | IF '(' expression ')' statement ELSE statement     
-         | WHILE '(' expression ')' statement                 
-         | 'System.out.println' '(' expression ')' ';'        
-         | Identifier '=' expression ';'                              
-         | Identifier '[' expression ']' '=' expression ';'                 
+statement: '{' (statement)* '}'                               #BraceStatement
+         | IF '(' expression ')' statement ELSE statement     #IfElseStatement
+         | WHILE '(' expression ')' statement                 #WhileStatement
+         | 'System.out.println' '(' expression ')' ';'        #PrintStatement
+         | Identifier '=' expression ';'                      #AssignStatement
+         | Identifier '[' expression ']' '=' expression ';'   #ArrayAssignStatement
          ;
-expression: expression '&&' expression                                
-          | expression '<' expression                                
-          | expression ('+' | '-') expression                         
-          | expression '*' expression                                 
-          | expression '[' expression ']'                             
-          | expression '.' LENGTH                               
-          | expression '.' Identifier '(' (expression (',' expression)*)? ')'       
-          | <INTEGER_LITERAL>                   
-          | TRUE                      
-          | FALSE                     
-          | Identifier                        
-          | THIS                      
-          | NEW INT '[' expression ']'      
-          | NEW Identifier '(' ')'            
-          | '!' expression                  
-          | '(' expression ')'              
-          ;
+expression    : expression '&&' expression                          #AndExpression
+        | expression '<' expression                                 #LessThanExpression
+        | expression ('+' | '-') expression                         #PlusMinusExpression
+        | expression '*' expression                                 #MultiplyExpression
+        | expression '[' expression ']'                             #ArrayExpression
+        | expression '.' LENGTH                                     #LengthExpression
+        | expression '.' Identifier '(' (expression (',' expression)*)? ')'       #CallExpression
+        | INTEGER_LITERAL                 #IntExpression
+        | TRUE                            #TrueExpression
+        | FALSE                           #FalseExpression
+        | Identifier                      #ClassExpression
+        | THIS                            #ThisExpression
+        | NEW INT '[' expression ']'      #NewIntArrayExpression
+        | NEW Identifier '(' ')'          #NewClassExpression
+        | '!' expression                  #NotExpression
+        | '(' expression ')'              #ParenthesisExpression
+        ;
 
 // types
-BOOLEAN : 'boolean';
-CLASS   : 'class';
-ELSE    : 'else';
-EXTENDS : 'extends';
-FALSE   : 'false';
-IF      : 'if';
+STATIC  : 'static';
+STRING  : 'String';
 INT     : 'int';
-LENGTH  : 'length';
+BOOLEAN : 'boolean';
+VOID    : 'void';
+CLASS   : 'class';
+EXTENDS : 'extends';
 MAIN    : 'main';
 NEW     : 'new';
 PUBLIC  : 'public';
-RETURN  : 'return';
-STATIC  : 'static';
-STRING  : 'String';
-THIS    : 'this';
-TRUE    : 'true';
-VOID    : 'void';
+IF      : 'if';
+ELSE    : 'else';
 WHILE   : 'while';
+RETURN  : 'return';
+TRUE    : 'true';
+FALSE   : 'false';
+LENGTH  : 'length';
+THIS    : 'this';
+
 
 // symbols
+COMMA      : ',';
+DOT        : '.';
+SEMICOLON  : ';';
 L_PAREN    : '(';
 R_PAREN    : ')';
 L_SQURE    : '[';
 R_SQURE    : ']';
 L_BRACE    : '{';
 R_BRACE    : '}';
-COMMA      : ',';
-DOT        : '.';
-SEMICOLON  : ';';
+
 
 // Operators
-ASSIGN  : '=';
-GT      : '>';
-LT      : '<';
-GE      : '>=';
-LE      : '<=';
-PLUS    : '+';
-MINUS   : '-';
-TIMES   : '*';
-BANG    : '!';
-AND     : '&&';
-OR      : '||';
+ASSIGN      : '=';
+GT          : '>';
+LT          : '<';
+GE          : '>=';
+LE          : '<=';
+PLUS        : '+';
+MINUS       : '-';
+MULTIPLY    : '*';
+NOT         : '!';
+OR          : '||';
+AND         : '&&';
+
 
 // Identifier
 Identifier      : [a-zA-Z_] ([a-zA-Z_] | [0-9])*;
-INTEGER_LITERAL : ('0' | [1-9] [0-9]*);
+INTEGER_LITERAL : ('0' | [1-9] ([0-9])*);
 
 // whitespaces
 WS      : [ \t\r\n]+ -> skip ;
