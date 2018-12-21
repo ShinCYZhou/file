@@ -35,7 +35,11 @@ public class MAIN {
         ParseTree tree = parser.prog();//build AST
 
         // Semantic check
-        //remain to be edited
+        ParseTreeWalker w = new ParseTreeWalker();
+        FirstTraverse first = new FirstTraverse();
+        w.walk(first, tree);
+        SecondTraverse second = new SecondTraverse(first.getGlobalScope(), first.getLocalScopes(), first.getClassScopes());
+        w.walk(second, tree);
 
 
         // show AST in GUI
